@@ -1,0 +1,15 @@
+/common/target
+/hexie/target
+/hexiebk/target
+/common/.settings
+.classpath
+.project
+/hexie/.settings
+/hexiebk/logs
+/hexiebk/.settings
+/hexiebk/.classpath
+/hexiebk/.project
+/hexie/bin
+/hexiebk/src/main/resources/config.properties
+/hexiebk/src/main/resources/wechat.properties
+/.settings
