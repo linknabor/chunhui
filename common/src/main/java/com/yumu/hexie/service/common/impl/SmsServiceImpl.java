@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.yumu.hexie.common.util.StringUtil;
 import com.yumu.hexie.integration.eucp.CreateBlueUtil;
 import com.yumu.hexie.integration.eucp.YimeiUtil;
 import com.yumu.hexie.model.commonsupport.gotong.SmsHis;
@@ -44,8 +45,12 @@ public class SmsServiceImpl implements SmsService {
             return false;
         }
         
+        String sign = getMsgSignature();
+        
         String code = RandomStringUtils.randomNumeric(5);
         String message = MessageFormat.format("短信验证码{0}，在30分钟内输入有效。", code);
+        message = sign.concat(message);
+        
         SmsHis sms = new SmsHis();
         sms.setCode(code);
         sms.setMsg(message);
@@ -96,6 +101,9 @@ public class SmsServiceImpl implements SmsService {
 	@Override
 	public boolean sendMsg(long userId,String mobile, String msg,long id, int msgType) {
 		boolean res = false;
+		
+		String sign = getMsgSignature();
+		msg = sign.concat(msg);
 		try{
 			if(testMode==null||!"true".equals(testMode)){
 			    if (systemConfigService.querySmsChannel()==0) {
@@ -122,6 +130,25 @@ public class SmsServiceImpl implements SmsService {
 		}
 		return res;
 	}
-
-
+	
+	private String getMsgSignature(){
+		
+		//是否使用自定义签名
+		String use_default_sign = systemConfigService.queryValueByKey("USE_DEFINED_MSG_SIGN"); 
+		
+		//1：自定义签名。0或者空：供应商签合协社区
+		if (!"1".equals(use_default_sign)) {
+			return ""; 
+		}
+		
+		String sign = systemConfigService.queryValueByKey("DEFAULT_SIGN");	//默认签名值
+		sign = "【"+sign+"】";
+		
+		if (StringUtil.isEmpty(sign)) {
+			LOGGER.error("未配置系统参数SYS_NAME，默认值：合协社区");
+			sign = "【合协社区】";
+		}
+		return sign;
+	}
+	
 }
