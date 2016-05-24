@@ -4,15 +4,10 @@
  */
 package com.yumu.hexie.service.impl;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Properties;
-
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +32,6 @@ import com.yumu.hexie.service.common.SystemConfigService;
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
     private static final Logger SCHEDULE_LOG = LoggerFactory.getLogger("com.yumu.hexie.schedule");
-    
-    private static Properties props = new Properties();
 
     @Inject
     private SystemConfigService systemConfigService;
@@ -93,27 +86,4 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 //        SCHEDULE_LOG.error("--------------------refresh ticket[E]-------------------");
     }
 
-    @Scheduled(cron = "0 1/4 * * * ?")
-    public void refreshChunhuiAccessTokensJob() {
-        if(!ConstantWeChat.isMainServer()){
-            return;
-        }
-        
-        SCHEDULE_LOG.error("--------------------refresh chunhui token[B]-------------------");
-        
-        String appId = systemConfigService.queryValueByKey("CHUNHUI_APPID");
-        
-        AccessToken at = WeixinUtilV2.getAccessToken(appId, systemConfigService.querySecret(appId));
-        if (at == null) {
-            SCHEDULE_LOG.error("获取Other token失败----------------------------------------------！！！！！！！！！！！");
-            return;
-        }
-//        systemConfigService.saveAccessToken(appId, at);
-        
-        /*20160516 huym 更新其他（春晖）的ACCESS_TOKEN*/
-        sharedSysConfigService.saveOtherAccessTokenInfo(appId, at);
-        SCHEDULE_LOG.error("--------------------refresh chunhui token[E]-------------------");
-    }
-    
-    
 }

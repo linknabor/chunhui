@@ -18,5 +18,4 @@ public interface SharedSysConfigService {
 
     public void saveAccessTokenInfo(AccessToken at);
     public void saveJsToken(String jsToken);
-    public void saveOtherAccessTokenInfo(String appId, AccessToken at);
 }

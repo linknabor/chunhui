@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.yumu.hexie.common.util.JacksonJsonUtil;
 import com.yumu.hexie.integration.wechat.entity.AccessToken;
 import com.yumu.hexie.model.MultipleRepository;
+import com.yumu.hexie.model.redis.RedisRepository;
 import com.yumu.hexie.model.system.SystemConfig;
 import com.yumu.hexie.model.system.SystemConfigRepository;
 import com.yumu.hexie.service.SharedSysConfigService;
@@ -66,28 +67,4 @@ public class SharedSysConfigServiceImpl implements SharedSysConfigService {
         multipleRepository.setSystemConfig(SystemConfigServiceImpl.JS_TOKEN,config);
         systemConfigRepository.save(config);
     }
-
-	public void saveOtherAccessTokenInfo(String appId, AccessToken at) {
-		
-		if (at!=null) {
-			try {
-				SystemConfig config = null;
-				List<SystemConfig> configs = systemConfigRepository.findAllBySysKey(String.format(SystemConfigServiceImpl.APP_ACC_TOKEN, appId));
-				    if (configs.size() > 0) {
-				        config = configs.get(0);
-				        config.setSysValue(JacksonJsonUtil.beanToJson(at));
-				    } else {
-				        config = new SystemConfig(String.format(SystemConfigServiceImpl.APP_ACC_TOKEN, appId),
-				            JacksonJsonUtil.beanToJson(at));
-				    }
-				
-				multipleRepository.setOtherAccessToken(String.format(SystemConfigServiceImpl.APP_ACC_TOKEN, appId), config);
-				
-				
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
 }

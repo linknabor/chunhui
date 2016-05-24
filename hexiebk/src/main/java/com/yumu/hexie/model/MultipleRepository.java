@@ -26,10 +26,6 @@ public class MultipleRepository {
     @Named("baofangRedisTemplate")
     private RedisTemplate<String, SystemConfig> baofangRedisTemplate;
     
-    @Inject
-    @Named("chunhuiRedisTemplate")
-    private RedisTemplate<String, SystemConfig> chunhuiRedisTemplate;
-    
     public void setSystemConfig(String key,SystemConfig value) {
 
         SCHEDULE_LOG.warn("update cache:" + key + "["+value+"]");
@@ -37,36 +33,15 @@ public class MultipleRepository {
 
         SystemConfig c = mainRedisTemplate.opsForValue().get(Keys.systemConfigKey(key));
         if(c != null) {
-            SCHEDULE_LOG.warn("get mainRedis cache:"+c.getSysKey() + "["+c.getSysValue()+"]");
+            SCHEDULE_LOG.warn("get main cache:"+c.getSysKey() + "["+c.getSysValue()+"]");
         }
         baofangRedisTemplate.opsForValue().set(Keys.systemConfigKey(key), value, 5, TimeUnit.MINUTES);
         
         c = baofangRedisTemplate.opsForValue().get(Keys.systemConfigKey(key));
         if(c != null) {
-            SCHEDULE_LOG.warn("get baofangRedis cache:"+c.getSysKey() + "["+c.getSysValue()+"]");
+            SCHEDULE_LOG.warn("get main cache:"+c.getSysKey() + "["+c.getSysValue()+"]");
         }
-        chunhuiRedisTemplate.opsForValue().set(Keys.systemConfigKey(key), value, 5, TimeUnit.MINUTES);
-        
-        c = chunhuiRedisTemplate.opsForValue().get(Keys.systemConfigKey(key));
-        if(c != null) {
-            SCHEDULE_LOG.warn("get chunhuiRedis cache:"+c.getSysKey() + "["+c.getSysValue()+"]");
-        }
-        
         SCHEDULE_LOG.warn("END update cache:" + key + "["+value+"]");
-    }
-    
-    /**
-     * 为其他公众号SET ACCESS_TOKEN,除了合协以外的
-     */
-    public void setOtherAccessToken(String key,SystemConfig value){
-    	
-        SCHEDULE_LOG.warn("BEGIN set other cache:" + key + "["+value+"]");
-
-        chunhuiRedisTemplate.opsForValue().set(Keys.systemConfigKey(key), value, 5, TimeUnit.MINUTES);
-        SCHEDULE_LOG.warn("set chunhuiRedis cache:"+Keys.systemConfigKey(key) + "["+value+"]");
-        
-        SCHEDULE_LOG.warn("END set other cache:" + key + "["+value+"]");
-    	
     }
 
 }

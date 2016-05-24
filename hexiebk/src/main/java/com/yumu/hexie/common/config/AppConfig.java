@@ -72,16 +72,10 @@ public class AppConfig {
     private String mainRedisHost;
     @Value(value = "${mainRedis.port}")
     private String mainRedisPort;
-    
     @Value(value = "${baofangRedis.host}")
     private String baofangRedisHost;
     @Value(value = "${baofangRedis.port}")
     private String baofangRedisPort;
-    
-    @Value(value = "${chunhuiRedis.host}")
-    private String chunhuiRedisHost;
-    @Value(value = "${chunhuiRedis.port}")
-    private String chunhuiRedisPort;
     
     public static void main(String[] args) {
         SpringApplication.run(AppConfig.class, args);
@@ -156,17 +150,6 @@ public class AppConfig {
         connectionFactory.setUsePool(true);
         return connectionFactory;
     }
-    
-    @Bean(name="chunhuiRdisConnectionFactory")
-    public RedisConnectionFactory chunhuiRdisConnectionFactory() {
-        JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
-        connectionFactory.setHostName(chunhuiRedisHost);
-        connectionFactory.setPort(Integer.valueOf(chunhuiRedisPort));
-        connectionFactory.setUsePool(true);
-        return connectionFactory;
-    }
-    
-    
     @Bean(name = "mainRedisTemplate")
     public  RedisTemplate<String, SystemConfig> mainRedisTemplate(){
         RedisTemplate<String, SystemConfig> redisTemplate = new RedisTemplate<String, SystemConfig>();
@@ -179,15 +162,6 @@ public class AppConfig {
     public RedisTemplate<String,SystemConfig> baofangRedisTemplate(){
         RedisTemplate<String,SystemConfig> redisTemplate = new RedisTemplate<String, SystemConfig>();
         redisTemplate.setConnectionFactory(baofangrRdisConnectionFactory());
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<SystemConfig>(SystemConfig.class));
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        return redisTemplate;
-    }
-    
-    @Bean(name = "chunhuiRedisTemplate")
-    public RedisTemplate<String,SystemConfig> chunhuiRedisTemplate(){
-        RedisTemplate<String,SystemConfig> redisTemplate = new RedisTemplate<String, SystemConfig>();
-        redisTemplate.setConnectionFactory(chunhuiRdisConnectionFactory());
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<SystemConfig>(SystemConfig.class));
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         return redisTemplate;
