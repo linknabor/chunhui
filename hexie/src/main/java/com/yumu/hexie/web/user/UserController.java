@@ -1,9 +1,8 @@
 package com.yumu.hexie.web.user;
 
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
@@ -32,6 +31,7 @@ import com.yumu.hexie.model.user.Address;
 import com.yumu.hexie.model.user.User;
 import com.yumu.hexie.service.common.GotongService;
 import com.yumu.hexie.service.common.SmsService;
+import com.yumu.hexie.service.common.SystemConfigService;
 import com.yumu.hexie.service.o2o.OperatorService;
 import com.yumu.hexie.service.shequ.WuyeService;
 import com.yumu.hexie.service.user.AddressService;
@@ -49,7 +49,7 @@ import com.yumu.hexie.web.user.resp.UserInfo;
 @Controller(value = "userController")
 public class UserController extends BaseController{
 	
-	private static Map<Long, String> userSession = new HashMap<Long, String>();
+	private static final Integer lock = 0;
 	
 	private static final Logger Log = LoggerFactory.getLogger(UserController.class);
 
@@ -67,9 +67,10 @@ public class UserController extends BaseController{
     private CouponService couponService;
     @Inject
     private OperatorService operatorService;
-    
     @Inject
     private GotongService goTongService;
+    @Inject
+    private SystemConfigService systemConfigService;
     
 
     @Value(value = "${testMode}")
@@ -233,35 +234,29 @@ public class UserController extends BaseController{
         }
     }
 	
-	private void sendSubscribeCoupon(User user){
+    private void sendSubscribeCoupon(User user){
 
-		if (userSession.containsKey(user.getId())) {
-			return;
-		}
-		
-		synchronized (UserController.userSession) {
+		synchronized (lock) {
 			
-			boolean hasCoupon = false;
+			List<Coupon>list = new ArrayList<Coupon>();
 			
-			userSession.put(user.getId(), "");
-//			Coupon coupon = couponService.addCoupon4Subscribe(user);
-			Coupon coupon = couponService.addCouponFromSeed("f339a2cf4857c6c7e1dfc6294e272b4a", user);	//由于关注红包放了第二批了。所以这里要和第一批做区别。
-			if (coupon != null) {
-				hasCoupon = true;
+			String couponStr = systemConfigService.queryValueByKey("SUBSCRIBE_COUPONS");
+			String[]couponArr = null;
+			if (!StringUtil.isEmpty(couponStr)) {
+				couponArr = couponStr.split(",");
 			}
-			coupon = couponService.addCouponFromSeed("9793112f13e02a48d6a7efc6991252d9", user);
-			if (coupon != null) {
-				hasCoupon = true;
+			if (couponArr.length>0) {
+				for (int i = 0; i < couponArr.length; i++) {
+					Coupon coupon = couponService.addCouponFromSeed(couponArr[i], user);
+					
+					list.add(coupon);
+				}
 			}
-			coupon = couponService.addCouponFromSeed("be9fa9fe513fd7abed94e674bb735002", user);
-			if (coupon != null) {
-				hasCoupon = true;
+			
+			if (list.size()>0) {
+				goTongService.sendSubscribeMsg(user);
 			}
-
-			if (!hasCoupon) {
-				return;
-			}
-			goTongService.sendSubscribeMsg(user);
+			
 		}
 		
 	}
