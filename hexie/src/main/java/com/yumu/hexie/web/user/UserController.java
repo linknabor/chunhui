@@ -250,7 +250,7 @@ public class UserController extends BaseController{
 			if (!StringUtil.isEmpty(couponStr)) {
 				couponArr = couponStr.split(",");
 			}
-			if (couponArr.length>0) {
+			if (couponArr!=null) {
 				for (int i = 0; i < couponArr.length; i++) {
 					Coupon coupon = couponService.addCouponFromSeed(couponArr[i], user);
 					
