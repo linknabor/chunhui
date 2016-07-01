@@ -51,7 +51,7 @@ public class UserController extends BaseController{
 	
 	private static final Integer lock = 0;
 	
-	private static final Logger Log = LoggerFactory.getLogger(UserController.class);
+	private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
 	@Inject
 	private AddressService addressService;
@@ -79,8 +79,10 @@ public class UserController extends BaseController{
 	@RequestMapping(value = "/userInfo", method = RequestMethod.GET)
 	@ResponseBody
     public BaseResult<UserInfo> userInfo(HttpSession session,@ModelAttribute(Constants.USER)User user) throws Exception {
-        user = userService.getById(user.getId());
-        
+      
+		log.warn("start get userInfo ...");
+		
+		user = userService.getById(user.getId());
         if(user != null){
         	
         	if (user.isNewRegiste()) {
@@ -113,6 +115,9 @@ public class UserController extends BaseController{
     @ResponseBody
     public BaseResult<UserInfo> bindBaofang(HttpSession session,@ModelAttribute(Constants.USER)User user,@PathVariable String appId,@PathVariable String code) throws Exception {
 
+		log.warn("start bind wechat ...");
+		log.warn("appId: " + appId + "code : " + code);
+		
 		UserWeiXin wuser = userService.getOtherWechatUser(appId, code);
 
 	    if(wuser != null) {
