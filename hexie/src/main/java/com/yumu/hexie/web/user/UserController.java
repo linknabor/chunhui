@@ -256,9 +256,13 @@ public class UserController extends BaseController{
 			}
 			if (couponArr!=null) {
 				for (int i = 0; i < couponArr.length; i++) {
-					Coupon coupon = couponService.addCouponFromSeed(couponArr[i], user);
-					
-					list.add(coupon);
+					try {
+						Coupon coupon = couponService.addCouponFromSeed(couponArr[i], user);
+						list.add(coupon);
+					} catch (Exception e) {
+						//已经领过红包的会报错
+						log.error(e.getMessage());
+					}
 				}
 			}
 			
