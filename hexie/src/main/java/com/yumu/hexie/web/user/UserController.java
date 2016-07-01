@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yumu.hexie.common.Constants;
 import com.yumu.hexie.common.util.DateUtil;
+import com.yumu.hexie.common.util.JacksonJsonUtil;
 import com.yumu.hexie.common.util.StringUtil;
 import com.yumu.hexie.integration.wechat.entity.user.UserWeiXin;
 import com.yumu.hexie.model.localservice.HomeServiceConstant;
@@ -80,10 +81,10 @@ public class UserController extends BaseController{
 	@ResponseBody
     public BaseResult<UserInfo> userInfo(HttpSession session,@ModelAttribute(Constants.USER)User user) throws Exception {
       
-		log.warn("start get userInfo ...");
+		log.warn("step1: getUserInfo...");
 		
 		user = userService.getById(user.getId());
-        if(user != null){
+        if(user != null && user.getBindAppId()!=null && user.getBindOpenId()!= null){
         	
         	if (user.isNewRegiste()) {
              	UserWeiXin baofangUser = userService.getOtherUserByOpenId(user.getBindAppId(), user.getBindOpenId());
@@ -115,8 +116,7 @@ public class UserController extends BaseController{
     @ResponseBody
     public BaseResult<UserInfo> bindBaofang(HttpSession session,@ModelAttribute(Constants.USER)User user,@PathVariable String appId,@PathVariable String code) throws Exception {
 
-		log.warn("start bind wechat ...");
-		log.warn("appId: " + appId + "code : " + code);
+		log.warn("step2: bind...");
 		
 		UserWeiXin wuser = userService.getOtherWechatUser(appId, code);
 
@@ -141,6 +141,8 @@ public class UserController extends BaseController{
     @ResponseBody
     public BaseResult<UserInfo> login(HttpSession session,@PathVariable String code) throws Exception {
         
+		log.warn("step3: login ...");
+		
         User userAccount = null;
         if (StringUtil.isNotEmpty(code)) {
             if("true".equals(testMode)&&NumberUtils.isDigits(code)) {
@@ -190,6 +192,8 @@ public class UserController extends BaseController{
 					return new BaseResult<UserInfo>().failCode(BaseResult.NEED_AUTH);
 				}
 				userAccount = userService.getOrSubscibeUserByWechatuser(user);
+				
+				log.warn("userAccount : " + JacksonJsonUtil.beanToJson(userAccount));
 		    }
 		    
 			pointService.addZhima(userAccount, 5, "zm-login-"+DateUtil.dtFormat(new Date(),"yyyy-MM-dd")+userAccount.getId());
@@ -200,7 +204,7 @@ public class UserController extends BaseController{
                 userAccount.generateShareCode();
                 userService.save(userAccount);
             }
-
+            
             session.setAttribute(Constants.USER, userAccount);
 			if(userAccount.isNewRegiste()){
 
