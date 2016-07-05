@@ -319,6 +319,12 @@ public class WuyeController extends BaseController {
 		User user = (User)session.getAttribute(Constants.USER);
 		List<Coupon>list = couponService.findAvaibleCoupon(user.getId(), ModelConstant.COUPON_SEED_USER_REGIST);
 		
+		String subscribeCouponRule = systemConfigService.queryValueByKey("SUBSCRIBE_COUPON_RULE");
+		int availableRule = 0;
+		if (!com.yumu.hexie.common.util.StringUtil.isEmpty(subscribeCouponRule)) {
+			availableRule = Integer.parseInt(subscribeCouponRule);
+		}
+		
 		if (list==null) {
 			list = new ArrayList<Coupon>();
 		}
@@ -332,7 +338,7 @@ public class WuyeController extends BaseController {
 				
 				Coupon c = subsCouponList.get(i);
 				
-				if (c.getRuleId()!=1) {	//由于关注红包发放了2次，而第一次发放的并不能用于缴纳物业费。写死规则为1 TODO 活动结束后要删除
+				if (availableRule!=c.getRuleId()) {	//由于关注红包发放了2次，而第一次发放的并不能用于缴纳物业费。写死规则为1 TODO 活动结束后要删除
 					subsCouponList.remove(i);
 					i = i-1;
 				}
