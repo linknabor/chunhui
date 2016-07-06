@@ -378,6 +378,10 @@ public class WuyeController extends BaseController {
 	@ResponseBody
 	public BaseResult updateCouponStatus(HttpSession session){
 		
+		if (session == null) {
+			return BaseResult.fail("no session info ...");
+		}
+		
 		User user = (User)session.getAttribute(Constants.USER);
 		List<Coupon>list = couponService.findAvaibleCoupon(user.getId(), ModelConstant.COUPON_SEED_USER_REGIST);
 		

@@ -81,8 +81,6 @@ public class UserController extends BaseController{
 	@ResponseBody
     public BaseResult<UserInfo> userInfo(HttpSession session,@ModelAttribute(Constants.USER)User user) throws Exception {
       
-		log.warn("step1: getUserInfo...");
-		
 		user = userService.getById(user.getId());
         if(user != null && user.getBindAppId()!=null && user.getBindOpenId()!= null){
         	
@@ -116,8 +114,6 @@ public class UserController extends BaseController{
     @ResponseBody
     public BaseResult<UserInfo> bindBaofang(HttpSession session,@ModelAttribute(Constants.USER)User user,@PathVariable String appId,@PathVariable String code) throws Exception {
 
-		log.warn("step2: bind...");
-		
 		UserWeiXin wuser = userService.getOtherWechatUser(appId, code);
 
 	    if(wuser != null) {
@@ -141,8 +137,6 @@ public class UserController extends BaseController{
     @ResponseBody
     public BaseResult<UserInfo> login(HttpSession session,@PathVariable String code) throws Exception {
         
-		log.warn("step3: login ...");
-		
         User userAccount = null;
         if (StringUtil.isNotEmpty(code)) {
             if("true".equals(testMode)&&NumberUtils.isDigits(code)) {
