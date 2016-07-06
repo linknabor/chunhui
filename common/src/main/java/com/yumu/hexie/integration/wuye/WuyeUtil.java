@@ -29,6 +29,8 @@ import com.yumu.hexie.integration.wuye.vo.WechatPayInfo;
 public class WuyeUtil {
 
 	private static String REQUEST_ADDRESS = "http://www.e-shequ.com/mobileInterface/mobile/";
+	private static String SYSTEM_NAME;
+	
 	private static Properties props = new Properties();
 	
 	static {
@@ -42,7 +44,7 @@ public class WuyeUtil {
 		}
 		
 		REQUEST_ADDRESS = props.getProperty("requestUrl");
-		
+		SYSTEM_NAME = props.getProperty("sysName");
 	}
 
 	// 接口地址
@@ -56,7 +58,7 @@ public class WuyeUtil {
 	private static final String PAY_INFO_URL = "payMentRecordInfoSDO.do?user_id=%s&trade_water_id=%s"; // 获取支付记录详情
 	private static final String QUICK_PAY_URL = "quickPaySDO.do?stmt_id=%s&curr_page=%s&total_count=%s"; // 快捷支付
 	private static final String WXLOGIN_URL = "weixinLoginSDO.do?weixin_id=%s"; // 登录验证（微信登录）
-	private static final String WX_PAY_URL = "wechatPayRequestSDO.do?user_id=%s&bill_id=%s&stmt_id=%s&openid=%s&coupon_unit=%s&coupon_num=%s"; // 微信支付请求
+	private static final String WX_PAY_URL = "wechatPayRequestSDO.do?user_id=%s&bill_id=%s&stmt_id=%s&openid=%s&coupon_unit=%s&coupon_num=%s&coupon_id=%s&from_sys=%s"; // 微信支付请求
 	private static final String WX_PAY_NOTICE = "wechatPayQuerySDO.do?user_id=%s&bill_id=%s&stmt_id=%s&trade_water_id=%s&package=%s"; // 微信支付返回
 	//private static final String GET_LOCATION_URL = "getGeographicalPositionSDO.do"; // 用户地理位置
 	private static final String COUPON_USE_QUERY_URL = "conponUseQuerySDO.do?user_id=%s";
@@ -125,8 +127,9 @@ public class WuyeUtil {
 		return (BaseResult<PaymentInfo>)httpGet(url,PaymentInfo.class);
 	}
 	// 10.缴费
-	public static BaseResult<WechatPayInfo> getPrePayInfo(String userId,String billId,String stmtId,String openId,String couponUnit, String couponNum) throws ValidationException {
-		String url = REQUEST_ADDRESS + String.format(WX_PAY_URL, userId,billId,stmtId,openId,couponUnit,couponNum);
+	public static BaseResult<WechatPayInfo> getPrePayInfo(String userId,String billId,String stmtId,String openId,
+				String couponUnit, String couponNum, String couponId) throws ValidationException {
+		String url = REQUEST_ADDRESS + String.format(WX_PAY_URL, userId,billId,stmtId,openId,couponUnit,couponNum,couponId,SYSTEM_NAME);
 		
 			BaseResult baseResult = httpGet(url,WechatPayInfo.class);
 			if (!baseResult.isSuccess()) {
