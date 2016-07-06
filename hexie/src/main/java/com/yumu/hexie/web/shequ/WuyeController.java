@@ -47,7 +47,8 @@ import com.yumu.hexie.web.BaseResult;
 
 @Controller(value = "wuyeController")
 public class WuyeController extends BaseController {
-	private static final Logger Log = LoggerFactory.getLogger(WuyeController.class);
+	
+	private static final Logger log = LoggerFactory.getLogger(WuyeController.class);
 
 	@Inject
 	private WuyeService wuyeService;
@@ -426,7 +427,11 @@ public class WuyeController extends BaseController {
 						
 						for (int j = 0; j < couponArr.length; j++) {
 							String coupon_id = couponArr[j];
-							couponService.comsume("20", Integer.parseInt(coupon_id));	//这里写死20
+							try {
+								couponService.comsume("20", Integer.parseInt(coupon_id));	//这里写死20
+							} catch (Exception e) {
+								log.error("couponId : " + coupon_id + ", " + e.getMessage());
+							}
 						}
 						
 					}
@@ -451,7 +456,7 @@ public class WuyeController extends BaseController {
 			
 		} catch (Exception e) {
 
-			Log.error("add Coupons for wuye Pay : " + e.getMessage());
+			log.error("add Coupons for wuye Pay : " + e.getMessage());
 		}
 		
 	}
