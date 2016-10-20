@@ -2,6 +2,8 @@ package com.yumu.hexie.service.shequ.impl;
 
 import javax.xml.bind.ValidationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.yumu.hexie.integration.wuye.WuyeUtil;
@@ -19,8 +21,9 @@ import com.yumu.hexie.service.shequ.WuyeService;
 
 @Service("wuyeService")
 public class WuyeServiceImpl implements WuyeService {
-
 	
+	private static final Logger logger = LoggerFactory.getLogger(WuyeServiceImpl.class);
+
 	@Override
 	public HouseListVO queryHouse(String userId) {
 		return WuyeUtil.queryHouse(userId).getData();
@@ -28,11 +31,17 @@ public class WuyeServiceImpl implements WuyeService {
 
 	@Override
 	public HexieUser bindHouse(String userId, String stmtId, String houseId) {
+		
 		BaseResult<HexieUser> r= WuyeUtil.bindHouse(userId, stmtId, houseId);
+		
+		logger.info("r : " + r.getResult());
+		
 		if ("04".equals(r.getResult())) {
 			throw new BizValidateException("当前用户已经认领该房屋!");
 		}
+		
 		if ("05".equals(r.getResult())) {
+			logger.info("r : " + r.getResult());
 			throw new BizValidateException("用户当前绑定房屋与已绑定房屋不属于同个小区，暂不支持此功能。");
 		}
 		return r.getData();
