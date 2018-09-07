@@ -19,6 +19,14 @@ public class HexieUser implements Serializable {
 	private String email_activie;
 	private String user_tel;
 	private String is_house;//房屋数
+	private String office_tel;//小区电话
+	
+	public String getOffice_tel() {
+		return office_tel;
+	}
+	public void setOffice_tel(String office_tel) {
+		this.office_tel = office_tel;
+	}
 	public String getUser_id() {
 		return user_id;
 	}

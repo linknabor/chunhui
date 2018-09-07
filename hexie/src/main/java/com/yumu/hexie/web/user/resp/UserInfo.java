@@ -53,6 +53,14 @@ public class UserInfo implements Serializable {
     private Integer couponCount;
     
     private String shareCode;
+    private String officeTel;
+
+    public String getOfficeTel() {
+		return officeTel;
+	}
+	public void setOfficeTel(String officeTel) {
+		this.officeTel = officeTel;
+	}
 
     public UserInfo(){}
     public UserInfo(User user){

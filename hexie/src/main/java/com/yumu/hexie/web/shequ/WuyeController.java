@@ -42,6 +42,7 @@ import com.yumu.hexie.service.common.SystemConfigService;
 import com.yumu.hexie.service.shequ.WuyeService;
 import com.yumu.hexie.service.user.CouponService;
 import com.yumu.hexie.service.user.PointService;
+import com.yumu.hexie.service.user.UserService;
 import com.yumu.hexie.web.BaseController;
 import com.yumu.hexie.web.BaseResult;
 
@@ -61,6 +62,9 @@ public class WuyeController extends BaseController {
     
     @Inject
     protected UserRepository userRepository;
+    
+    @Inject
+    protected UserService userService;
     
     @Inject
 	private SystemConfigService systemConfigService;
@@ -90,8 +94,14 @@ public class WuyeController extends BaseController {
 		if(StringUtil.isEmpty(user.getWuyeId())){
 			return BaseResult.fail("删除房子失败！请重新访问页面并操作！");
 		}
-		boolean r = wuyeService.deleteHouse(user.getWuyeId(), houseId);
-		if (r) {
+		com.yumu.hexie.integration.wuye.resp.BaseResult<String> r = wuyeService.deleteHouse(user.getWuyeId(), houseId);
+		if ((boolean)r.isSuccess()) {
+			//添加电话到user表
+			log.error("这里是删除房子后保存的电话");
+			log.error("保存电话到user表==》开始");
+			user.setOfficeTel(r.getData());
+			userService.save(user);
+			log.error("保存电话到user表==》成功");
 			return BaseResult.successResult("删除房子成功！");
 		} else {
 			return BaseResult.fail("删除房子失败！");
@@ -117,8 +127,15 @@ public class WuyeController extends BaseController {
 			@PathVariable String stmtId,
 			@PathVariable String houseId) throws Exception {
 		HexieUser u = wuyeService.bindHouse(user.getWuyeId(), stmtId, houseId);
+		log.error("HexieUser u = "+u);
 		if(u != null) {
 			pointService.addZhima(user, 1000, "zhima-house-"+user.getId()+"-"+houseId);
+			//添加电话到user表
+			log.error("这里是添加房子后保存的电话");
+			log.error("保存电话到user表==》开始");
+			user.setOfficeTel(u.getOffice_tel());
+			userService.save(user);
+			log.error("保存电话到user表==》成功");
 		}
 		return BaseResult.successResult(u);
 	}
