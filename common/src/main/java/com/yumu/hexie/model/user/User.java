@@ -71,6 +71,16 @@ public class User extends BaseModel{
     private boolean newRegiste = true;
     private String bindAppId;
     private String bindOpenId;
+    private String officeTel;
+	
+	
+	public String getOfficeTel() {
+		return officeTel;
+	}
+
+	public void setOfficeTel(String officeTel) {
+		this.officeTel = officeTel;
+	}
 	
 	
 	public long getCurrentAddrId() {
@@ -385,6 +395,20 @@ public class User extends BaseModel{
     public void setBindAppId(String bindAppId) {
         this.bindAppId = bindAppId;
     }
+
+	@Override
+	public String toString() {
+		return "User [realName=" + realName + ", name=" + name + ", tel=" + tel + ", provinceId=" + provinceId
+				+ ", cityId=" + cityId + ", countyId=" + countyId + ", xiaoquId=" + xiaoquId + ", county=" + county
+				+ ", xiaoquName=" + xiaoquName + ", longitude=" + longitude + ", latitude=" + latitude
+				+ ", currentAddrId=" + currentAddrId + ", wuyeId=" + wuyeId + ", openid=" + openid + ", memo=" + memo
+				+ ", subscribe=" + subscribe + ", status=" + status + ", nickname=" + nickname + ", sex=" + sex
+				+ ", age=" + age + ", city=" + city + ", country=" + country + ", province=" + province + ", language="
+				+ language + ", headimgurl=" + headimgurl + ", subscribe_time=" + subscribe_time + ", registerDate="
+				+ registerDate + ", identityCard=" + identityCard + ", zhima=" + zhima + ", lvdou=" + lvdou
+				+ ", couponCount=" + couponCount + ", shareCode=" + shareCode + ", newRegiste=" + newRegiste
+				+ ", bindAppId=" + bindAppId + ", bindOpenId=" + bindOpenId + ", officeTel=" + officeTel + "]";
+	}
 
 	
 	
