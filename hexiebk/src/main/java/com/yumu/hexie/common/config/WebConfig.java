@@ -1,14 +1,10 @@
 package com.yumu.hexie.common.config;
 
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.transform.Source;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -28,14 +24,10 @@ import org.springframework.http.converter.support.AllEncompassingFormHttpMessage
 import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import org.springframework.web.servlet.view.velocity.VelocityConfigurer;
-import org.springframework.web.servlet.view.velocity.VelocityViewResolver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -44,7 +36,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ComponentScan({"com.yumu.hexie.backend.web"})
 public class WebConfig extends WebMvcConfigurationSupport {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
     private static final String PROP_FILE_ENCODING = "UTF-8";
 
     @Bean
@@ -54,11 +45,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return handlerMapping;
     }
 
-    @Override
-    @Bean
-    public HandlerMapping resourceHandlerMapping() {
-        return super.resourceHandlerMapping();
-    }
     protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     	converters.clear();
     	MappingJackson2HttpMessageConverter c = new MappingJackson2HttpMessageConverter(){
@@ -114,17 +100,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return messageSource;
     }
     
-//    @Override  
-//    protected void addInterceptors(InterceptorRegistry registry) {  
-//    	LOGGER.error("addInterceptors start");  
-//        registry.addInterceptor(checkUserInterceptor());  
-//        LOGGER.error("addInterceptors end");  
-//    }
-//    
-//    @Bean
-//    public HandlerInterceptor checkUserInterceptor(){
-//    	return new CheckUserAddedInterceptor();
-//    }
     @Bean(name = "mapper")
     public ObjectMapper mapper() {
         return new ObjectMapper();

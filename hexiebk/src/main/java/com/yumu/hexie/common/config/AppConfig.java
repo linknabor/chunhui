@@ -1,7 +1,6 @@
 package com.yumu.hexie.common.config;
 
 import java.beans.PropertyVetoException;
-import java.lang.reflect.Method;
 
 import javax.sql.DataSource;
 
@@ -12,8 +11,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.interceptor.KeyGenerator;
-import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -33,8 +30,6 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -66,17 +61,13 @@ public class AppConfig {
     @Value(value = "${redis.host}")
     private String redisHost;
     @Value(value = "${redis.port}")
-    private String redisPort;
-
-    @Value(value = "${mainRedis.host}")
-    private String mainRedisHost;
-    @Value(value = "${mainRedis.port}")
-    private String mainRedisPort;
-    @Value(value = "${baofangRedis.host}")
-    private String baofangRedisHost;
-    @Value(value = "${baofangRedis.port}")
-    private String baofangRedisPort;
+    private Integer redisPort;
+    @Value(value = "${redis.password}")
+    private String redisPassword;
+    @Value(value = "${redis.database}")
+    private Integer redisDatabase;
     
+
     public static void main(String[] args) {
         SpringApplication.run(AppConfig.class, args);
     }
@@ -127,46 +118,13 @@ public class AppConfig {
     public RedisConnectionFactory redisConnectionFactory() {
         JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
         connectionFactory.setHostName(redisHost);
-        connectionFactory.setPort(Integer.valueOf(redisPort));
+        connectionFactory.setPort(redisPort);
+        connectionFactory.setPassword(redisPassword);
+        connectionFactory.setDatabase(redisDatabase);
         connectionFactory.setUsePool(true);
         return connectionFactory;
     }
 
-
-    @Bean(name="mainRedisConnectionFactory")
-    public RedisConnectionFactory mainRedisConnectionFactory() {
-        JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
-        connectionFactory.setHostName(mainRedisHost);
-        connectionFactory.setPort(Integer.valueOf(mainRedisPort));
-        connectionFactory.setUsePool(true);
-        return connectionFactory;
-    }
-
-    @Bean(name="baofangrRdisConnectionFactory")
-    public RedisConnectionFactory baofangrRdisConnectionFactory() {
-        JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
-        connectionFactory.setHostName(baofangRedisHost);
-        connectionFactory.setPort(Integer.valueOf(baofangRedisPort));
-        connectionFactory.setUsePool(true);
-        return connectionFactory;
-    }
-    @Bean(name = "mainRedisTemplate")
-    public  RedisTemplate<String, SystemConfig> mainRedisTemplate(){
-        RedisTemplate<String, SystemConfig> redisTemplate = new RedisTemplate<String, SystemConfig>();
-        redisTemplate.setConnectionFactory(mainRedisConnectionFactory());
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<SystemConfig>(SystemConfig.class));
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        return redisTemplate;
-    }
-    @Bean(name = "baofangRedisTemplate")
-    public RedisTemplate<String,SystemConfig> baofangRedisTemplate(){
-        RedisTemplate<String,SystemConfig> redisTemplate = new RedisTemplate<String, SystemConfig>();
-        redisTemplate.setConnectionFactory(baofangrRdisConnectionFactory());
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<SystemConfig>(SystemConfig.class));
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        return redisTemplate;
-    }
-    
     @Bean(name = "stringRedisTemplate")
     public StringRedisTemplate getStringRedisTemplate() {
         return new StringRedisTemplate(redisConnectionFactory());
@@ -217,40 +175,7 @@ public class AppConfig {
         return redisTemplate;
     };
     
-    public KeyGenerator keyGenerator() {
-        return new KeyGenerator(){
-
-        	@Override
-        	public Object generate(Object target, Method method, Object... params) {
-        		return generateKey(params);
-        	}
-
-        	/**
-        	 * Generate a key based on the specified parameters.
-        	 */
-        	public Object generateKey(Object... params) {
-        		LOGGER.error("------------------------------------------"+params.length+"***");
-        		if (params.length == 0) {
-        			return SimpleKey.EMPTY;
-        		}
-        		if (params.length == 1) {
-        			Object param = params[0];
-        			if (param != null && !param.getClass().isArray()) {
-                		LOGGER.error("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+param.toString()+"***");
-        				return param.toString();
-        			}
-        		}
-        		return new SimpleKey(params);
-        	}
-
-        };
-    }
-    
-    @Bean(name = "passwordEncoder")
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
+	    @Bean
     public CacheManager getCacheManager() {
     	RedisCacheManager m = new RedisCacheManager(getRedisTemplate());
     	m.setDefaultExpiration(1800);//

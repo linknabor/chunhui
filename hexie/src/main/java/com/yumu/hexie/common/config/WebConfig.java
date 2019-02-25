@@ -27,7 +27,6 @@ import org.springframework.http.converter.xml.SourceHttpMessageConverter;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -45,34 +44,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
 	private static final Logger LOGGER = LoggerFactory.getLogger(WebConfig.class);
     private static final String PROP_FILE_ENCODING = "UTF-8";
 
-//    @Bean
-//    public ViewResolver viewResolver() {
-//    	VelocityViewResolver viewResolver = new VelocityViewResolver();
-//
-//        viewResolver.setSuffix(".vm");
-//        viewResolver.setContentType("text/html;charset=UTF-8");
-//        viewResolver.setDateToolAttribute("dateTool");
-//        viewResolver.setNumberToolAttribute("numberTool");
-//        viewResolver.setExposeRequestAttributes(true);
-//        viewResolver.setExposeSessionAttributes(true);
-//        viewResolver.setOrder(0);
-//        //viewResolver.setAllowSessionOverride(true);
-//        return viewResolver;
-//    }
-
-    
-//    @Bean
-//    public VelocityConfigurer velocityConfigurer(){
-//        VelocityConfigurer configurer = new VelocityConfigurer();
-//        configurer.setResourceLoaderPath("jsp");
-//        Map<String,Object> prop = new HashMap<String,Object>();
-//        prop.put("directive.foreach.counter.name","loopCounter");
-//        prop.put("directive.foreach.counter.initial.value",0);
-//        prop.put("input.encoding","UTF-8");
-//        prop.put("output.encoding","UTF-8");
-//        configurer.setVelocityPropertiesMap(prop);
-//        return configurer;
-//    }
     @Bean
     public RequestMappingHandlerMapping requestMappingHandlerMapping() {
         RequestMappingHandlerMapping handlerMapping = super.requestMappingHandlerMapping();
@@ -80,11 +51,6 @@ public class WebConfig extends WebMvcConfigurationSupport {
         return handlerMapping;
     }
 
-    @Override
-    @Bean
-    public HandlerMapping resourceHandlerMapping() {
-        return super.resourceHandlerMapping();
-    }
     protected void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
     	converters.clear();
     	MappingJackson2HttpMessageConverter c = new MappingJackson2HttpMessageConverter(){

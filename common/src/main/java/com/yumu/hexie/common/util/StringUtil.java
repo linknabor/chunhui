@@ -11,6 +11,12 @@ public class StringUtil {
 		return (value == null || "".equals(value));
 	}
 
+	public static boolean equals(Object s1, Object s2) {
+	    if(s1 == null && s2 == null) {
+	        return true;
+	    }
+	    return (s1 != null && s1.equals(s2));
+	}
 	public static boolean isNotEmpty(Object value) {
 		return (!isEmpty(value));
 	}

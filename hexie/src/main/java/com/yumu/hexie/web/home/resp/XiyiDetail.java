@@ -5,12 +5,11 @@
 package com.yumu.hexie.web.home.resp;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.BeanUtils;
 
 import com.yumu.hexie.common.util.DateUtil;
 import com.yumu.hexie.model.localservice.HomeBillItem;
@@ -27,17 +26,13 @@ import com.yumu.hexie.model.localservice.bill.YunXiyiBill;
 public class XiyiDetail implements Serializable {
     public XiyiDetail(){}
     public XiyiDetail(YunXiyiBill bill) {
-        try {
-            BeanUtils.copyProperties(this, bill);
-            Date sd = bill.getRequireDate();
-            if(bill.getServiceDate()!= null) {
-                sd = bill.getServiceDate();
-            }
-            setServiceDateStr(DateUtil.dtFormat(sd,"yyyy.MM.dd HH:mm"));
-            setCreateDateStr(DateUtil.dtFormat(new Date(bill.getCreateDate()),"yyyy.MM.dd HH:mm"));
-        } catch (IllegalAccessException e) {
-        } catch (InvocationTargetException e) {
-        }
+        BeanUtils.copyProperties(this, bill);
+		Date sd = bill.getRequireDate();
+		if(bill.getServiceDate()!= null) {
+		    sd = bill.getServiceDate();
+		}
+		setServiceDateStr(DateUtil.dtFormat(sd,"yyyy.MM.dd HH:mm"));
+		setCreateDateStr(DateUtil.dtFormat(new Date(bill.getCreateDate()),"yyyy.MM.dd HH:mm"));
     }
     private static final long serialVersionUID = -2853311912311861239L;
     private long id;

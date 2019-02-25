@@ -16,10 +16,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.yumu.hexie.common.util.StringUtil;
-import com.yumu.hexie.integration.wechat.constant.ConstantWeChat;
-import com.yumu.hexie.integration.wechat.entity.AccessToken;
-import com.yumu.hexie.integration.wechat.util.WeixinUtil;
-import com.yumu.hexie.integration.wechat.util.WeixinUtilV2;
 import com.yumu.hexie.model.ModelConstant;
 import com.yumu.hexie.model.localservice.bill.YunXiyiBill;
 import com.yumu.hexie.model.localservice.bill.YunXiyiBillRepository;
@@ -40,7 +36,6 @@ import com.yumu.hexie.model.user.User;
 import com.yumu.hexie.model.user.UserRepository;
 import com.yumu.hexie.service.ScheduleService;
 import com.yumu.hexie.service.common.SmsService;
-import com.yumu.hexie.service.common.SystemConfigService;
 import com.yumu.hexie.service.common.WechatCoreService;
 import com.yumu.hexie.service.exception.BizValidateException;
 import com.yumu.hexie.service.o2o.XiyiService;

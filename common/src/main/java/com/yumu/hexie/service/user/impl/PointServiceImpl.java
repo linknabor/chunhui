@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.yumu.hexie.model.ModelConstant;
 import com.yumu.hexie.model.user.PointRecord;
@@ -23,7 +23,7 @@ public class PointServiceImpl implements PointService {
 	private UserRepository userRepository;
 	@Override
 	public void addLvdou(User user, int point, String key) {
-		if(StringUtils.isNotBlank(key)) {
+		if(!StringUtils.isEmpty(key)) {
 			List<PointRecord> rs = pointRecordRepository.findAllByKeyStr(key);
 			if(rs != null&&rs.size()>0) {
 				return;
@@ -41,7 +41,7 @@ public class PointServiceImpl implements PointService {
 
 	@Override
 	public void addZhima(User user, int point, String key) {
-		if(StringUtils.isNotBlank(key)) {
+		if(!StringUtils.isEmpty(key)) {
 			List<PointRecord> rs = pointRecordRepository.findAllByKeyStr(key);
 			if(rs != null&&rs.size()>0) {
 				return;
