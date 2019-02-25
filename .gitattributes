@@ -1,2 +1,1 @@
-/hexie/src/main/resources/config.properties merge=ours 
-/hexie/src/main/resources/wechat.properties merge=ours 
+*.properties merge=ours
