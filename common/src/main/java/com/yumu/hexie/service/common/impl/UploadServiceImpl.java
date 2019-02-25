@@ -10,7 +10,6 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,8 +60,8 @@ public class UploadServiceImpl implements UploadService {
     @Async
     public void updateRepairImg(RepairOrder order) {
         if (order.isImageUploaded()
-                ||( StringUtil.isBlank(order.getImgUrls()) 
-                && StringUtil.isBlank(order.getCommentImgUrls()))) {
+                ||( StringUtils.isEmpty(order.getImgUrls()) 
+                && StringUtils.isEmpty(order.getCommentImgUrls()))) {
             return;
         }
         String imgUrls = moveImges(order.getImgUrls());
@@ -75,7 +74,7 @@ public class UploadServiceImpl implements UploadService {
     }
 
     private String moveImges(String imgUrls) {
-        if(StringUtil.isBlank(imgUrls)) {
+        if(StringUtils.isEmpty(imgUrls)) {
             return "";
         }
         String newImgUrls = "";

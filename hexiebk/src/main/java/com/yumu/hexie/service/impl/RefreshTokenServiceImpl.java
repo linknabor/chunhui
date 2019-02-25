@@ -17,7 +17,6 @@ import com.yumu.hexie.integration.wechat.entity.AccessToken;
 import com.yumu.hexie.integration.wechat.util.WeixinUtil;
 import com.yumu.hexie.integration.wechat.util.WeixinUtilV2;
 import com.yumu.hexie.service.RefreshTokenService;
-import com.yumu.hexie.service.SharedSysConfigService;
 import com.yumu.hexie.service.common.SystemConfigService;
 
 /**
@@ -36,8 +35,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Inject
     private SystemConfigService systemConfigService;
     
-    @Inject
-    private SharedSysConfigService sharedSysConfigService;
     @Scheduled(cron = "0 1/4 * * * ?")
     public void refreshOtherAccessTokensJob() {
 //        if(!ConstantWeChat.isMainServer()){

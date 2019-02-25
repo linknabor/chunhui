@@ -5,11 +5,10 @@
 package com.yumu.hexie.web.home.resp;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.BeanUtils;
 
 import com.yumu.hexie.common.util.DateUtil;
 import com.yumu.hexie.model.localservice.HomeServiceConstant;
@@ -27,50 +26,46 @@ public class XiyiListItem implements Serializable {
     private static final long serialVersionUID = 342299540914632784L;
     public XiyiListItem(){}
     public XiyiListItem(YunXiyiBill bill) {
-        try {
-            BeanUtils.copyProperties(this, bill);
-            Date sd = bill.getRequireDate();
-            if(bill.getServiceDate()!= null) {
-                sd = bill.getServiceDate();
-            }
-            setServiceDateStr(DateUtil.dtFormat(sd,"yyyy.MM.dd HH:mm"));
-            setCreateDateStr(DateUtil.dtFormat(new Date(bill.getCreateDate()),"yyyy.MM.dd HH:mm"));
-            switch(status){
-                case HomeServiceConstant.ORDER_STATUS_CREATE:
-                    statusStr = "未支付";
-                    break;
-                case HomeServiceConstant.ORDER_STATUS_CANCELED_USER:
-                case HomeServiceConstant.ORDER_STATUS_CANCELED_TIMEOUT:
-                    statusStr = "已取消";
-                    break;
-                case HomeServiceConstant.ORDER_STATUS_REJECTED_MERCHANT:
-                    statusStr = "该区域不支持";
-                    break;
-                case HomeServiceConstant.ORDER_STATUS_PAYED:
-                    statusStr = "已支付";
-                    break;
-                case HomeServiceConstant.ORDER_STATUS_ACCEPT:
-                    statusStr = "等待上门取件";
-                    break;
-                case HomeServiceConstant.ORDER_STATUS_FETCHED:
-                    statusStr = "洗衣中";
-                    break;
-                case HomeServiceConstant.ORDER_STATUS_SERVICED:
-                    statusStr = "送回中";
-                    break;
-                case HomeServiceConstant.ORDER_STATUS_BACKED:
-                    statusStr = "已送回";
-                    break;
-                case HomeServiceConstant.ORDER_STATUS_SIGNED:
-                    statusStr = "已签收";
-                    break;
-                default:
-                    statusStr = "状态异常";
-                    break;
-            }
-        } catch (IllegalAccessException e) {
-        } catch (InvocationTargetException e) {
-        }
+        BeanUtils.copyProperties(this, bill);
+		Date sd = bill.getRequireDate();
+		if(bill.getServiceDate()!= null) {
+		    sd = bill.getServiceDate();
+		}
+		setServiceDateStr(DateUtil.dtFormat(sd,"yyyy.MM.dd HH:mm"));
+		setCreateDateStr(DateUtil.dtFormat(new Date(bill.getCreateDate()),"yyyy.MM.dd HH:mm"));
+		switch(status){
+		    case HomeServiceConstant.ORDER_STATUS_CREATE:
+		        statusStr = "未支付";
+		        break;
+		    case HomeServiceConstant.ORDER_STATUS_CANCELED_USER:
+		    case HomeServiceConstant.ORDER_STATUS_CANCELED_TIMEOUT:
+		        statusStr = "已取消";
+		        break;
+		    case HomeServiceConstant.ORDER_STATUS_REJECTED_MERCHANT:
+		        statusStr = "该区域不支持";
+		        break;
+		    case HomeServiceConstant.ORDER_STATUS_PAYED:
+		        statusStr = "已支付";
+		        break;
+		    case HomeServiceConstant.ORDER_STATUS_ACCEPT:
+		        statusStr = "等待上门取件";
+		        break;
+		    case HomeServiceConstant.ORDER_STATUS_FETCHED:
+		        statusStr = "洗衣中";
+		        break;
+		    case HomeServiceConstant.ORDER_STATUS_SERVICED:
+		        statusStr = "送回中";
+		        break;
+		    case HomeServiceConstant.ORDER_STATUS_BACKED:
+		        statusStr = "已送回";
+		        break;
+		    case HomeServiceConstant.ORDER_STATUS_SIGNED:
+		        statusStr = "已签收";
+		        break;
+		    default:
+		        statusStr = "状态异常";
+		        break;
+		}
     }
 
     private long id;

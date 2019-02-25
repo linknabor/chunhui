@@ -5,12 +5,12 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.yumu.hexie.common.util.RandomStringUtils;
 import com.yumu.hexie.common.util.StringUtil;
 import com.yumu.hexie.integration.eucp.CreateBlueUtil;
 import com.yumu.hexie.integration.eucp.YimeiUtil;

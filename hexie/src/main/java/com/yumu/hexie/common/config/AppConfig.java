@@ -1,17 +1,22 @@
 package com.yumu.hexie.common.config;
 
 import java.beans.PropertyVetoException;
-import java.lang.reflect.Method;
+import java.io.File;
 
 import javax.sql.DataSource;
 
+import org.apache.catalina.connector.Connector;
+import org.apache.coyote.http11.Http11NioProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.interceptor.KeyGenerator;
-import org.springframework.cache.interceptor.SimpleKey;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -32,8 +37,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
@@ -42,6 +45,7 @@ import com.yumu.hexie.model.market.Cart;
 import com.yumu.hexie.model.promotion.share.ShareAccessRecord;
 import com.yumu.hexie.model.system.SystemConfig;
 
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
 @Configuration
 @ComponentScan(basePackages = {"com.yumu.hexie"}, includeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = {"com.yumu.hexie.web.*","com.yumu.hexie.service.*"}))
 @EnableJpaRepositories({"com.yumu.hexie.model.*"})
@@ -50,6 +54,7 @@ import com.yumu.hexie.model.system.SystemConfig;
 @EnableAsync
 @EnableCaching(proxyTargetClass=true)
 public class AppConfig {
+	
     private static final Logger LOGGER = LoggerFactory.getLogger(AppConfig.class);
     @Value(value = "${jdbc.dialect}")
     private String dialect;
@@ -65,9 +70,46 @@ public class AppConfig {
     @Value(value = "${redis.host}")
     private String redisHost;
     @Value(value = "${redis.port}")
-    private String redisPort;
+    private Integer redisPort;
     @Value(value = "${redis.password}")
     private String redisPassword;
+    @Value(value = "${redis.database}")
+    private Integer redisDatabase;
+    
+    public static void main(String[] args) {
+        SpringApplication.run(AppConfig.class, args);
+    }
+    
+    @Bean
+    public EmbeddedServletContainerFactory EmbeddedServletContainerFactory(){
+        TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
+        factory.setPort(86);
+//        factory.addAdditionalTomcatConnectors(createSslConnector());
+        return factory;
+    }
+    
+    /**
+     * 设置https密钥及密码
+     * @return
+     */
+    private Connector createSslConnector() {
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        Http11NioProtocol protocol = (Http11NioProtocol) connector.getProtocolHandler();
+        try {
+            File truststore = new File("F:/keystore/server.jks");
+            connector.setScheme("https");
+            protocol.setSSLEnabled(true);
+            connector.setSecure(true);
+            connector.setPort(8444);
+            protocol.setKeystoreFile(truststore.getAbsolutePath());
+            protocol.setKeystorePass("hongzhitech20130110");
+//            protocol.setKeyAlias("springboot");
+            return connector;
+        } catch (Exception ex) {
+            throw new IllegalStateException("cant access keystore: [" + "keystore" + "]  ", ex);
+        }
+    }
+    
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
@@ -115,8 +157,9 @@ public class AppConfig {
     public RedisConnectionFactory redisConnectionFactory() {
         JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
         connectionFactory.setHostName(redisHost);
-        connectionFactory.setPort(Integer.valueOf(redisPort));
-        //connectionFactory.setPassword(redisPassword);
+        connectionFactory.setPort(redisPort);
+        connectionFactory.setPassword(redisPassword);
+        connectionFactory.setDatabase(redisDatabase);
         connectionFactory.setUsePool(true);
         return connectionFactory;
     }
@@ -170,40 +213,8 @@ public class AppConfig {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<SystemConfig>(SystemConfig.class));
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         return redisTemplate;
-    };
-    public KeyGenerator keyGenerator() {
-        return new KeyGenerator(){
-
-        	@Override
-        	public Object generate(Object target, Method method, Object... params) {
-        		return generateKey(params);
-        	}
-
-        	/**
-        	 * Generate a key based on the specified parameters.
-        	 */
-        	public Object generateKey(Object... params) {
-        		LOGGER.error("------------------------------------------"+params.length+"***");
-        		if (params.length == 0) {
-        			return SimpleKey.EMPTY;
-        		}
-        		if (params.length == 1) {
-        			Object param = params[0];
-        			if (param != null && !param.getClass().isArray()) {
-                		LOGGER.error("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$"+param.toString()+"***");
-        				return param.toString();
-        			}
-        		}
-        		return new SimpleKey(params);
-        	}
-
-        };
     }
     
-    @Bean(name = "passwordEncoder")
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
     @Bean
     public CacheManager getCacheManager() {
     	RedisCacheManager m = new RedisCacheManager(getRedisTemplate());

@@ -2,321 +2,89 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<groupId>com.yumu</groupId>
-		<artifactId>hexie-parent</artifactId>
-		<version>1.0</version>
-		<relativePath>../pom.xml</relativePath>
+   		<groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-parent</artifactId>
+	    <version>1.5.17.RELEASE</version>
+	    <relativePath/>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.yumu</groupId>
 	<artifactId>hexie-common</artifactId>
 	<version>1.0</version>
-	<name>hexie common</name>
+	<name>hexie-common</name>
 	<description>hexie common</description>
 	<url>http://home.e-shequ.com</url>
 	<packaging>jar</packaging>
 	<dependencies>
-		<dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <exclusions>
-                <!-- Exclude Commons Logging in favor of SLF4j -->
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-        	<groupId>com.sun</groupId>
-			<artifactId>tools</artifactId>
-			<scope>system</scope>
-		</dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-aspects</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
+		  <dependency>
+		    <groupId>mysql</groupId>
+		    <artifactId>mysql-connector-java</artifactId>
+		  </dependency>
+		  <dependency>
+                <groupId>org.springframework.session</groupId>
+                <artifactId>spring-session</artifactId>
+        	</dependency>
+        
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.springframework.boot</groupId> -->
+<!-- 			<artifactId>spring-boot-starter-security</artifactId> -->
+<!-- 		</dependency> -->
         <dependency>
             <groupId>c3p0</groupId>
             <artifactId>c3p0</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
+	    	<version>0.9.1.2</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.coobird</groupId>
-            <artifactId>thumbnailator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.1-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-        </dependency>
-       			<!-- 页面解析 -->
-		<dependency>
-			<groupId>org.htmlparser</groupId>
-			<artifactId>htmlparser</artifactId>
-		</dependency>
-        <!-- AspectJ -->
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-        </dependency>
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-        <!-- @Inject -->
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-        </dependency>
-        <!-- Servlet -->
-        <dependency>
-            <groupId>org.apache.tomcat</groupId>
-            <artifactId>tomcat-servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>jsp-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp.jstl</groupId>
-            <artifactId>jstl-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.servlet</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-<!--         <dependency> -->
-<!--             <groupId>org.apache.velocity</groupId> -->
-<!--             <artifactId>velocity</artifactId> -->
-<!--         </dependency> -->
-<!--         <dependency> -->
-<!--             <groupId>org.apache.velocity</groupId> -->
-<!--             <artifactId>velocity-tools</artifactId> -->
-<!--             <exclusions> -->
-<!--                 <exclusion> -->
-<!--                     <groupId>commons-beanutils</groupId> -->
-<!--                     <artifactId>commons-beanutils</artifactId> -->
-<!--                 </exclusion> -->
-<!--                 <exclusion> -->
-<!--                     <groupId>commons-digester</groupId> -->
-<!--                     <artifactId>commons-digester</artifactId> -->
-<!--                 </exclusion> -->
-<!--                 <exclusion> -->
-<!--                     <groupId>commons-chain</groupId> -->
-<!--                     <artifactId>commons-chain</artifactId> -->
-<!--                 </exclusion> -->
-<!--                 <exclusion> -->
-<!--                     <groupId>commons-logging</groupId> -->
-<!--                     <artifactId>commons-logging</artifactId> -->
-<!--                 </exclusion> -->
-<!--                 <exclusion> -->
-<!--                     <groupId>commons-validator</groupId> -->
-<!--                     <artifactId>commons-validator</artifactId> -->
-<!--                 </exclusion> -->
-<!--                 <exclusion> -->
-<!--                     <groupId>oro</groupId> -->
-<!--                     <artifactId>oro</artifactId> -->
-<!--                 </exclusion> -->
-<!--                 <exclusion> -->
-<!--                     <groupId>sslext</groupId> -->
-<!--                     <artifactId>sslext</artifactId> -->
-<!--                 </exclusion> -->
-<!--                 <exclusion> -->
-<!--                     <groupId>org.apache.struts</groupId> -->
-<!--                     <artifactId>struts-core</artifactId> -->
-<!--                 </exclusion> -->
-<!--                 <exclusion> -->
-<!--                     <groupId>org.apache.struts</groupId> -->
-<!--                     <artifactId>struts-taglib</artifactId> -->
-<!--                 </exclusion> -->
-<!--                 <exclusion> -->
-<!--                     <groupId>org.apache.struts</groupId> -->
-<!--                     <artifactId>struts-tiles</artifactId> -->
-<!--                 </exclusion> -->
-<!--             </exclusions> -->
-<!--         </dependency> -->
-		<!-- commons httpclient 3.0.1 -->
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.0.1</version>
         </dependency>
-        <!-- Jackson JSON Processor -->
+        
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-        </dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4.4</version><!--$NO-MVN-MAN-VER$-->
+		</dependency>
+        
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <groupId>com.qiniu</groupId>
+            <artifactId>qiniu-java-sdk</artifactId>
+            <version>6.1.9</version>
         </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-hibernate4</artifactId>
-        </dependency>
+        
 		<dependency>  
 		    <groupId>com.fasterxml.jackson.dataformat</groupId>  
 		    <artifactId>jackson-dataformat-xml</artifactId>  
 		</dependency> 
         <dependency>
-            <groupId>com.qiniu</groupId>
-            <artifactId>qiniu-java-sdk</artifactId>
-        </dependency>
-        
-        
-        <!-- for wechat[BEGIN] -->
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-collections</groupId>
-            <artifactId>commons-collections</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.ezmorph</groupId>
-            <artifactId>ezmorph</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-        </dependency>
-        <dependency>
             <groupId>xstream</groupId>
             <artifactId>xstream</artifactId>
+            <version>1.1.2</version>
         </dependency>
-        <!-- for wechat[END] -->
         
-        <!-- redis -->
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+            <version>1</version>
         </dependency>
-        <dependency>
-            <groupId>redis.clients</groupId>
-            <artifactId>jedis</artifactId>
-        </dependency>
-        <dependency>
-			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session-data-redis</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.session</groupId>
-			<artifactId>spring-session</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.orange.redis-embedded</groupId>
-			<artifactId>embedded-redis</artifactId>
-		</dependency>
-
-        <!-- Test -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-        	<groupId>commons-httpclient</groupId>
-        	<artifactId>commons-httpclient</artifactId>
-        	<version>3.0.1</version>
-        </dependency>
+        
 	</dependencies>
+
 </project>
